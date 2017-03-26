@@ -107,9 +107,12 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RGr-4h-gy1" id="chs-cQ-scn">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Kca-ss-V3Y" kind="unwind" identifier="ToPageVC" unwindAction="unwindFromListVCWithSender:" id="4Mx-dc-bhe"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -130,6 +133,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S0M-rM-cz4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Kca-ss-V3Y" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="973.60000000000002" y="-520.38980509745136"/>
         </scene>

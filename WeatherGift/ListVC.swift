@@ -11,11 +11,8 @@ import UIKit
 class ListVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    
     var locationsArray = [String]()
     var currentPage = 0
-    
-    
     
     
     override func viewDidLoad() {
@@ -28,7 +25,17 @@ class ListVC: UIViewController {
         // Do any additional setup after loading the view.
     }
 
-
+    // MARK: - Segues
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ToPageVC" {
+            let controller = segue.destination as! PageVC
+            // identify the table cell (row) that the user tapped
+            // This is passed back to PageVC as currentPage, so that PageVC knows which page to create and display
+            currentPage = (tableView.indexPathForSelectedRow?.row)!
+            controller.currentPage = currentPage
+            controller.locationsArray = locationsArray
+        }
+    }
 
 }
 
@@ -45,9 +52,6 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currentPage = indexPath.row
-        print("Hey! I've been clicked at indexPath.row \(indexPath.row)")
-    
-    
+    // We do not need to put any code here because the cell triggers a segue
 }
 }
