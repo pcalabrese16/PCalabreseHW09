@@ -14,7 +14,7 @@ class ListVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var addBarButton: UIBarButtonItem!
-    var locationsArray = [String]()
+    var locationsArray = [WeatherLocation]()
     var currentPage = 0
     
     
@@ -71,7 +71,7 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LocationCell", for: indexPath)
-        cell.textLabel?.text = locationsArray[indexPath.row]
+        cell.textLabel?.text = locationsArray[indexPath.row].name
         return cell
     }
     
@@ -119,6 +119,17 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    func updateTable(place: GMSPlace) {
+        var newLocation = WeatherLocation()
+        newLocation.name = place.name
+        let lat = place.coordinate.latitude
+        let long = place.coordinate.longitude
+        newLocation.coordinates = "\(lat), \(long)"
+        print(newLocation.coordinates)
+        locationsArray.append(newLocation)
+        tableView.reloadData()
+    }
+    
 }
 
 
@@ -126,10 +137,10 @@ extension ListVC: GMSAutocompleteViewControllerDelegate {
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        print("Place name: \(place.name)")
-        print("Place address: \(place.formattedAddress)")
-        print("Place attributions: \(place.attributions)")
+        
         dismiss(animated: true, completion: nil)
+        updateTable(place: place)
+
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
