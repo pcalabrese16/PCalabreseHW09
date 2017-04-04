@@ -37,15 +37,25 @@ class DetailVC: UIViewController {
         
         let isHidden = (locationsArray[currentPage].currentTemp == 999.9)
         temperatureLabel.isHidden = isHidden
-        
         locationLabel.isHidden = isHidden
         
         locationLabel.text = locationsArray[currentPage].name
-        dateLabel.text = locationsArray[currentPage].coordinates
+        dateLabel.text = formatTimeForTimeZone(unixDateToFormat: locationsArray[currentPage].currentTime, timeZoneString: locationsArray[currentPage].timeZone)
+        // dateLabel.text = locationsArray[currentPage].coordinates
         let curTemperature = String(format: "%3.f", locationsArray[currentPage].currentTemp) + "°"
         temperatureLabel.text = curTemperature
         print("%%%% curTemperature inside updateUserInterface = \(curTemperature)")
         summaryLabel.text = locationsArray[currentPage].dailySummary
+        currentImage.image = UIImage(named: locationsArray[currentPage].currentIcon)
+    }
+    
+    func formatTimeForTimeZone(unixDateToFormat: TimeInterval, timeZoneString: String) -> String {
+        let usableDate = Date(timeIntervalSince1970: unixDateToFormat)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE, MMM dd, y"
+        dateFormatter.timeZone = TimeZone(identifier: timeZoneString)
+        let dateString = dateFormatter.string(from: usableDate)
+        return dateString
     }
 
 }
