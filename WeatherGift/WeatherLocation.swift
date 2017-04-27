@@ -37,38 +37,32 @@ class WeatherLocation: WeatherUserDefault {
     
     func getWeather(completed: @escaping () -> ()) {
         let weatherURL = urlBase + urlAPIKey + coordinates
-        print(weatherURL)
         
         Alamofire.request(weatherURL).responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
                 if let temperature = json["currently"]["temperature"].double {
-                    print("TEMP inside getWeather = \(temperature)")
                     self.currentTemp = temperature
                 } else {
                     print("Could not return a temperature")
                 }
                 if let summary = json["daily"]["summary"].string {
-                    print("SUMMARY inside getWeather = \(summary)")
                     self.dailySummary = summary
                 } else {
                     print("Could not return a daily summary")
                 }
                 if let icon = json["currently"]["icon"].string {
-                    print("ICON inside getWeather = \(icon)")
                     self.currentIcon = icon
                 } else {
                     print("Could not return an icon")
                 }
                 if let time = json["currently"]["time"].double {
-                    print("TIME inside getWeather = \(time)")
                     self.currentTime = time
                 } else {
                     print("Could not return a time")
                 }
                 if let timeZone = json["timezone"].string {
-                    print("TIMEZONE inside getWeather = \(timeZone)")
                     self.timeZone = timeZone
                 } else {
                     print("Could not return a timezone")

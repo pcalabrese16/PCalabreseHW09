@@ -32,11 +32,17 @@ class DetailVC: UIViewController {
         tableView.dataSource = self
         collectionView.delegate = self
         collectionView.dataSource = self
-        if currentPage == 0 {
-            getLocation()
-        }
+        
         locationsArray[currentPage].getWeather {
             self.updateUserInterface()
+        }
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if currentPage == 0 {
+            getLocation()
         }
     }
     
@@ -56,7 +62,6 @@ class DetailVC: UIViewController {
         
         let curTemperature = String(format: "%3.f", locationsArray[currentPage].currentTemp) + "°"
         temperatureLabel.text = curTemperature
-        print("%%%% curTemperature inside updateUserInterface = \(curTemperature)")
         summaryLabel.text = locationsArray[currentPage].dailySummary
         currentImage.image = UIImage(named: locationsArray[currentPage].currentIcon)
         tableView.reloadData()
@@ -90,10 +95,19 @@ extension DetailVC: CLLocationManagerDelegate {
         case .authorizedWhenInUse, .authorizedAlways:
             locationManager.startUpdatingLocation()
         case .denied:
-            print("I'm sorry - I can't show location. User has not authorized it.")
+            if currentPage == 0 && self.view.window != nil {
+                showAlert(title: "User has not authorized location services", message: "Open the Settings app > Privacy > Location Services > WeatherGift to enable location services in this app.")
+            }
         case .restricted:
-            print("Access denied - likely parental controls are restricting location use in this app.")
+            showAlert(title: "Location Services Denied", message: "It may be that parental controls are restricting location use in this app.")
         }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(defaultAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     
@@ -104,16 +118,13 @@ extension DetailVC: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        if currentPage == 0 {
-            
+        if currentPage == 0 && self.view.window != nil {
             let geoCoder = CLGeocoder()
             
             currentLocation = locations.last
             
             let currentLat = "\(currentLocation.coordinate.latitude)"
             let currentLong = "\(currentLocation.coordinate.longitude)"
-            
-            print("Coordinates are: " + currentLat + currentLong)
             
             var place = ""
             geoCoder.reverseGeocodeLocation(currentLocation, completionHandler: {placemarks, error in
@@ -124,7 +135,6 @@ extension DetailVC: CLLocationManagerDelegate {
                     print("Error retrieving place. Error code: \(error)")
                     place = "Parts Unknown"
                 }
-                print(place)
                 self.locationsArray[0].name = place
                 self.locationsArray[0].coordinates = currentLat + "," + currentLong
                 self.locationsArray[0].getWeather {

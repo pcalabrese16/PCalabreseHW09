@@ -130,12 +130,11 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func updateTable(place: GMSPlace) {
-        var newLocation = WeatherLocation()
+        let newLocation = WeatherLocation()
         newLocation.name = place.name
         let lat = place.coordinate.latitude
         let long = place.coordinate.longitude
         newLocation.coordinates = "\(lat), \(long)"
-        print(newLocation.coordinates)
         locationsArray.append(newLocation)
         tableView.reloadData()
         saveUserDefaults()

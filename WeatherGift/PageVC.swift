@@ -15,6 +15,8 @@ class PageVC: UIPageViewController {
     var pageControl: UIPageControl!
     var listButton: UIButton!
     let barButtonWidth: CGFloat = 44
+    var aboutButton: UIButton!
+    var aboutButtonSize: CGSize!
 
     
     override func viewDidLoad() {
@@ -35,7 +37,7 @@ class PageVC: UIPageViewController {
         }
         
         
-        var newLocation = WeatherLocation()
+        let newLocation = WeatherLocation()
         newLocation.name = "Unknown Weather Location"
         if locationsArray.count == 0 {
             locationsArray.append(newLocation)
@@ -48,7 +50,7 @@ class PageVC: UIPageViewController {
         setViewControllers([createDetailVC(forPage: 0)], direction: .forward, animated: false, completion: nil)
         
         configurePageControl()
-        configureListButton()
+        configureButtons()
         
     }
     
@@ -70,7 +72,7 @@ class PageVC: UIPageViewController {
         view.addSubview(pageControl)
     }
     
-    func configureListButton() {
+    func configureButtons() {
         
         let barButtonHeight = barButtonWidth
         
